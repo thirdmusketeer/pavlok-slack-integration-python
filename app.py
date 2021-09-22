@@ -28,7 +28,7 @@ def message(payload):
     channel_id = event.get('channel')
     user_id = event.get('user')
     if BOT_ID != user_id:
-        response = requests.get("https://app.pavlok.com/unlocked/remotes/ganesh/vibrate/10")
+        response = requests.get(os.environ.get("PAVLOK_REMOTE_STIMULUS_URL"))
         if response.ok:
             slack_status_msg = "Stimulus sent!"
         else:
