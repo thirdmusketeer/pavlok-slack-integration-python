@@ -6,6 +6,7 @@ import slack
 from flask import Flask
 from dotenv import load_dotenv
 from slackeventsapi import SlackEventAdapter
+import requests
 
 
 dotenv_path = join(dirname(__file__), '.env')
@@ -17,8 +18,8 @@ slack_event_adapter = SlackEventAdapter(os.environ.get('SLACK_SIGNING_SECRET'), 
 client = slack.WebClient(token=os.environ.get('SLACK_TOKEN'))
 BOT_ID = client.api_call('auth.test')['user_id']
 
-print(BOT_ID)
-print(os.environ.get('SLACK_SIGNING_SECRET'), os.environ.get('SLACK_TOKEN'))
+# print(BOT_ID)
+# print(os.environ.get('SLACK_SIGNING_SECRET'), os.environ.get('SLACK_TOKEN'))
 
 
 @slack_event_adapter.on('message')
@@ -28,7 +29,11 @@ def message(payload):
     user_id = event.get('user')
     if BOT_ID != user_id:
         client.chat_postMessage(channel=channel_id, text='Hello World!')
-
+        response = requests.get("https://app.pavlok.com/unlocked/remotes/ganesh/vibrate/10")
+        if response.ok:
+            print("Stimulus sent!")
+        else:
+            print("Something went wrong!")
 
 if __name__ == "__main__":
     app.run(debug=True)
