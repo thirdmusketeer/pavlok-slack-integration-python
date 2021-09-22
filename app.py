@@ -28,12 +28,14 @@ def message(payload):
     channel_id = event.get('channel')
     user_id = event.get('user')
     if BOT_ID != user_id:
-        client.chat_postMessage(channel=channel_id, text='Hello World!')
         response = requests.get("https://app.pavlok.com/unlocked/remotes/ganesh/vibrate/10")
         if response.ok:
-            print("Stimulus sent!")
+            slack_status_msg = "Stimulus sent!"
         else:
-            print("Something went wrong!")
+            slack_status_msg = "Something went wrong, unable to send Stimulus"
+        print(slack_status_msg)
+        client.chat_postMessage(channel=channel_id, text=slack_status_msg)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
